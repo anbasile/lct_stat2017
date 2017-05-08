@@ -2,7 +2,7 @@
 
 ** Load the dataset
 
-#+BEGIN_SRC R :results output :session
+#+BEGIN_SRC R :results output :session :exports both
 df <- read.csv('newsreactions.csv', header=TRUE)
 df = df[-c(1)] # remove the first column, it's an index and R recreates it anyway
 str(df)
@@ -50,7 +50,7 @@ sorted = df[with(df, # create new (sorted) df
 					 
 ** Preview 
 
-#+BEGIN_SRC R :session
+#+BEGIN_SRC R :session :exports both
 head(sorted$message)
 #+END_SRC
 
