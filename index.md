@@ -1,48 +1,40 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. the problem</a></li>
-<li><a href="#sec-2">2. the (statistical) method</a></li>
-<li><a href="#sec-3">3. discussion</a></li>
-</ul>
-</div>
-</div>
+# the problem
 
-
-# the problem<a id="sec-1" name="sec-1"></a>
-
-## Some headlines are controversial<a id="sec-1-1" name="sec-1-1"></a>
+## Some headlines are controversial
 
 &#x2026;but some are not. Why?
 
-## some examples<a id="sec-1-2" name="sec-1-2"></a>
+## some examples
 
 > THERE IS NO HIRING BIAS AGAINST WOMAN IN TECH, THEY JUST SUCK AT INTERVIEWS (Breitbart)
 
 . . .
 
 > MONTI PORTA SFIGA (Libero)
+> 
+> [Prime Minister Monti brings bad luck]
 
 . . .
 
 > APRÈ LE NAUFRAGE DE LE PEN, MACRON ARCHIFAVORI (Le Figaro)
+> 
+> [After Le Pen's bad performance in the debate, Macron is the favored candidate]
 
-## *Controversy*<a id="sec-1-3" name="sec-1-3"></a>
+## *Controversy*
 
 noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē
 
 > a discussion marked especially by the expression of opposing views (from Merriam-Webster)
 
-# the (statistical) method<a id="sec-2" name="sec-2"></a>
+# the (statistical) method
 
-## a corpus<a id="sec-2-1" name="sec-2-1"></a>
+## a corpus
 
 . . . 
 
 facebook pages of newspapers
 
-## annotation<a id="sec-2-2" name="sec-2-2"></a>
+## annotation
 
 . . .
 
@@ -56,7 +48,7 @@ takes time and money
 
 (I don't have any)
 
-## distant supervision<a id="sec-2-3" name="sec-2-3"></a>
+## distant supervision
 
 . . .
 
@@ -66,7 +58,7 @@ takes time and money
 
 take user's reactions as annotations
 
-## dataset<a id="sec-2-4" name="sec-2-4"></a>
+## dataset
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -107,7 +99,7 @@ take user's reactions as annotations
 </tbody>
 </table>
 
-## what to do with the counts?<a id="sec-2-5" name="sec-2-5"></a>
+## what to do with the counts?
 
 . . .
 
@@ -121,18 +113,18 @@ how much information they encode?
 
 Time for some **statistics**!
 
-## a recap, before we go on:<a id="sec-2-6" name="sec-2-6"></a>
+## a recap, before we go on:
 
 -   **RQ:** Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?
 -   **Hypo:** the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state
 -   **Operationalization:** bag-of-word language modeling as a proxy for entropy score computed over user's reactions
 -   **Prediction:** a set of word/character n-grams will correlate with entropy scores
 
-## Entropy<a id="sec-2-7" name="sec-2-7"></a>
+## Entropy
 
 $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
 
-## example<a id="sec-2-8" name="sec-2-8"></a>
+## example
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -183,7 +175,7 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
 </tbody>
 </table>
 
-## <a id="sec-2-9" name="sec-2-9"></a>
+## 
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -230,11 +222,11 @@ $$P(i)=count(i)/N$$
 
 $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
 
-## <a id="sec-2-10" name="sec-2-10"></a>
+## 
 
     reactions <- c(1 ,3 ,1 ,1 ,1)
 
-## Implementing the function<a id="sec-2-11" name="sec-2-11"></a>
+## Implementing the function
 
     entropy <- function(vector) {
         vprob <- c(vector/sum(vector)) # compute probs
@@ -246,7 +238,7 @@ Remember:
 
 $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
 
-## outline of the code<a id="sec-2-12" name="sec-2-12"></a>
+## outline of the code
 
     reactions <- c(1,3,1,1,1)
     vprob <- c(reactions/sum(reactions))
@@ -258,23 +250,23 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
     [1] 1
     [1] 2.128085
 
-## some examples<a id="sec-2-13" name="sec-2-13"></a>
+## some examples
 
-    entropy(c(1,1,1,1,1))
+    entropy(c(1,1))
 
-    [1] 2.321928
+    [1] 1
 
-    entropy(c(100,1,1,1,1))
+    entropy(c(100,1))
 
-    [1] 0.3121165
+    [1] 0.08013605
 
     entropy(c(1))
 
     [1] 0
 
-## let's sort our dataset<a id="sec-2-14" name="sec-2-14"></a>
+## let's sort our dataset
 
-## load<a id="sec-2-15" name="sec-2-15"></a>
+## load
 
     df <- read.csv('newsreactions.csv', header=TRUE)
     df = df[-c(1)] # remove the first column, it's an index and R recreates it anyway
@@ -290,13 +282,13 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
      $ WOW        : int  1 0 0 2 0 1 0 219 7 0 ...
      $ SAD        : int  0 0 0 0 0 1 3 0 33 0 ...
 
-## compute entropy<a id="sec-2-16" name="sec-2-16"></a>
+## compute entropy
 
     df['entropy'] = apply(df[c('LOVE','ANGRY','HAHA','WOW','SAD')], # where to apply
                           1, # (1: rowwise; 2: columnwise)
                           entropy) # function to apply
 
-## preview<a id="sec-2-17" name="sec-2-17"></a>
+## preview
 
     head(subset(df, select=-c(message, description)))
 
@@ -308,12 +300,12 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
     5   39    0     9   12   0   0     NaN
     6  559   43    15   12   1   1 1.51781
 
-## sort<a id="sec-2-18" name="sec-2-18"></a>
+## sort
 
     sorted = df[with(df, # create new (sorted) df
                      order(-entropy)),] # by entropy, increasing (see minus sign)
 
-## Results<a id="sec-2-19" name="sec-2-19"></a>
+## Results
 
     head(sorted$message)
 
@@ -325,14 +317,14 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
     [6] Dall'Inizio dell'anno nel nostro Paese si sono verificati oltre 1470 casi e il 33% ha avuto complicanze. Nell'elenco anche Germania e Belgio. Nel settembre scorso l'America era stata dichiarata «libera dal morbillo endemico»
     413 Levels: 'Io sto con la sposa', il Magazine ANSA sul documentario di Gabriele #DelGrande, #FreeDelGrande - http://ow.ly/NiTB30b4J0e ...
 
-# discussion<a id="sec-3" name="sec-3"></a>
+# discussion
 
-## <a id="sec-3-1" name="sec-3-1"></a>
+## 
 
-1.  work in progress (a better dataset)
+1.  work in progress:
+    -   a better dataset
+    -   first step
 2.  from Basic statistics: remember kurtosis?
-3.  applications? [ask M. & D. for possible applications in their field] <- ToDo!!
-4.  <https://github.com/anbasile/lct_stat2017> <- data & code
-5.  <https://anbasile.github.io/lct_stat2017/> <- presentation
-
-## THANKS<a id="sec-3-2" name="sec-3-2"></a>
+3.  useful applications for L&C students?
+4.  <https://anbasile.github.io/lct_stat2017/> <- presentation
+5.  <https://github.com/anbasile/lct_stat2017> <- data & code

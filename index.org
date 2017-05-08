@@ -5,7 +5,7 @@
 #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
 #+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
 #+OPTIONS: e:t email:t f:t inline:t num:t p:nil pri:nil stat:t
-#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:1 todo:t |:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
 #+CREATOR: Emacs 25.2.1 (Org mode 8.2.10)
 #+DESCRIPTION:
 #+EXCLUDE_TAGS: noexport
@@ -31,12 +31,16 @@ THERE IS NO HIRING BIAS AGAINST WOMAN IN TECH, THEY JUST SUCK AT INTERVIEWS (Bre
 
 #+BEGIN_QUOTE
 MONTI PORTA SFIGA (Libero)
+
+[Prime Minister Monti brings bad luck]
 #+END_QUOTE
 
 . . .
 
 #+BEGIN_QUOTE
 APRÈ LE NAUFRAGE DE LE PEN, MACRON ARCHIFAVORI (Le Figaro)
+
+[After Le Pen's bad performance in the debate, Macron is the favored candidate]
 #+END_QUOTE
 
 ** /Controversy/
@@ -172,18 +176,18 @@ print(-sum(vprob*log2(vprob)))
 ** some examples
 
 #+BEGIN_SRC R
-entropy(c(1,1,1,1,1))
+entropy(c(1,1))
 #+END_SRC
 
 #+RESULTS:
-: [1] 2.321928
+: [1] 1
 
 #+BEGIN_SRC R
-entropy(c(100,1,1,1,1))
+entropy(c(100,1))
 #+END_SRC
 
 #+RESULTS:
-: [1] 0.3121165
+: [1] 0.08013605
 
 #+BEGIN_SRC R
 entropy(c(1))
@@ -260,13 +264,14 @@ head(sorted$message)
 
 ** 
 
-1. work in progress (a better dataset)
+1. work in progress:
+   + a better dataset
+   + first step
 2. from Basic statistics: remember kurtosis?
-3. applications? [ask M. & D. for possible applications in their field] <- ToDo!!
-4. https://github.com/anbasile/lct_stat2017 <- data & code
-5. https://anbasile.github.io/lct_stat2017/ <- presentation
+3. useful applications for L&C students?
+4. https://anbasile.github.io/lct_stat2017/ <- presentation
+5. https://github.com/anbasile/lct_stat2017 <- data & code
 
-** THANKS
 
 * commands for exporting 					   :noexport:
 
@@ -289,8 +294,19 @@ pandoc --standalone -t revealjs \
 - corpus based study (but one could measure reactions in other ways)
 - distant supervision: we have no labelled data. We need a proxie
 - when counts are interesting!
+- The more we know about something, the lower the entropy will be because we are less surprised by the outcome of a trial.
+- The higher the entropy, the higher the level of controversy
 - issues:
   + don't use read.table
-  + 
 - reproducible research
+- recap: ok, but comment
+- explain the dataset better (language)
+- example class (side)
+- start well (say what you are going to talk about)
+- better comment the R code (what it does)
+- avoid empty slides
+- comment the results (add translation, explain difference between high and low entropy values)
+- last slide (leave comments)
+- say bias correctly
+
 ** ☛ TODO add screenshot of data creation
