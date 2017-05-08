@@ -1,0 +1,300 @@
+#+TITLE: Using entropy to find controversial headlines
+#+DATE: <2017-05-09 mar>
+#+AUTHOR: Angelo Basile
+#+EMAIL: a.basile@student.rug.nl
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:t f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:1 todo:t |:t
+#+CREATOR: Emacs 25.2.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+#+PROPERTY:header-args :results output :session :tangle yes :comments org :exports both
+
+* the problem
+
+** Some headlines are controversial
+
+...but some are not. Why?
+
+** some examples
+
+#+BEGIN_QUOTE
+THERE IS NO HIRING BIAS AGAINST WOMAN IN TECH, THEY JUST SUCK AT INTERVIEWS (Breitbart)
+#+END_QUOTE
+
+
+. . .
+
+#+BEGIN_QUOTE
+MONTI PORTA SFIGA (Libero)
+#+END_QUOTE
+
+. . .
+
+#+BEGIN_QUOTE
+APRÈ LE NAUFRAGE DE LE PEN, MACRON ARCHIFAVORI (Le Figaro)
+#+END_QUOTE
+
+** /Controversy/
+
+noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē
+
+#+BEGIN_QUOTE
+a discussion marked especially by the expression of opposing views (from Merriam-Webster)
+#+END_QUOTE
+
+* the method
+
+** a corpus
+
+. . . 
+
+facebook pages of newspapers
+
+** annotation
+
+. . .
+
+is expensive
+
+. . .
+
+takes time and money
+
+. . .
+
+(I don't have any)
+
+** distant supervision
+
+. . .
+
+<img src="./img/react.png" class="img-fluid" alt="Reactions">
+
+. . .
+
+take user's reactions as annotations
+
+
+** dataset
+
+
+| <20>                 |      |      |       |
+| text                 | LIKE | LOVE | ANGRY |
+|----------------------+------+------+-------|
+| Le grandi tappe della Guerra fredda |  379 |    1 |     3 |
+| #Fisco, case ecologiche ed e-bike |  393 |    4 |     3 |
+
+** what to do with the counts?
+
+. . .
+
+when are they interesting? 
+
+. . .
+
+how much information they encode?
+
+. . .
+
+Time for some *statistics*!
+
+** a recap, before we go on:
+
+- RQ :: Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?
+- Hypo :: the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state
+- Operationalization :: bag-of-word language modeling as a proxy for entropy score computed over user's reactions
+- Prediction :: a set of word/character n-grams will correlate with entropy scores
+
+** Entropy
+
+$$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
+
+** example
+
+|                 | LOVE | ANGRY | HAHA | WOW | SAD |
+|-----------------+------+-------+------+-----+-----|
+| some text       |    1 |     3 |    1 |   1 |   1 |
+| some other text |    4 |     3 |   11 |   1 |   1 |
+
+** 
+
+| LOVE | ANGRY | HAHA | WOW | SAD | Total(N) |
+|------+-------+------+-----+-----+-------|
+|    1 |     3 |    1 |   1 |   1 | 7     |
+
+Remember:
+
+$$P(i)=count(i)/N$$
+
+$$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
+
+** 
+
+#+BEGIN_SRC R
+reactions <- c(1 ,3 ,1 ,1 ,1)
+#+END_SRC
+
+** Implementing the function
+
+#+BEGIN_SRC R
+entropy <- function(vector) {
+    vprob <- c(vector/sum(vector)) # compute probs
+    h <- -sum(vprob*log2(vprob)) # compute H
+    return (h)
+}
+#+END_SRC
+
+#+RESULTS:
+
+Remember:
+
+$$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
+
+** outline of the code
+
+#+BEGIN_SRC R
+reactions <- c(1,3,1,1,1)
+vprob <- c(reactions/sum(reactions))
+print(vprob)
+print(sum(vprob))
+print(-sum(vprob*log2(vprob)))
+#+END_SRC
+
+#+RESULTS:
+: [1] 0.1428571 0.4285714 0.1428571 0.1428571 0.1428571
+: [1] 1
+: [1] 2.128085
+
+** some examples
+
+#+BEGIN_SRC R
+entropy(c(1,1,1,1,1))
+#+END_SRC
+
+#+RESULTS:
+: [1] 2.321928
+
+#+BEGIN_SRC R
+entropy(c(100,1,1,1,1))
+#+END_SRC
+
+#+RESULTS:
+: [1] 0.3121165
+
+#+BEGIN_SRC R
+entropy(c(1))
+#+END_SRC
+
+#+RESULTS:
+: [1] 0
+
+** let's sort our dataset
+
+** load
+#+BEGIN_SRC R
+df <- read.csv('newsreactions.csv', header=TRUE)
+df = df[-c(1)] # remove the first column, it's an index and R recreates it anyway
+str(df)
+#+END_SRC
+
+#+RESULTS:
+: 'data.frame':	421 obs. of  8 variables:
+:  $ message    : Factor w/ 413 levels "'Io sto con la sposa', il Magazine ANSA sul documentario di Gabriele #DelGrande, #FreeDelGrande - http://ow.ly/NiTB30b4J0e",..: 144 109 308 110 229 111 108 373 233 412 ...
+:  $ description: Factor w/ 291 levels "\n"," ","'Contestazione al contenuto di questa legge totalmente assurda' (ANSA)",..: 6 270 184 24 99 8 24 278 92 105 ...
+:  $ LIKE       : int  47 11 8 89 39 559 27 2539 135 122 ...
+:  $ LOVE       : int  0 0 1 10 0 43 0 48 4 7 ...
+:  $ ANGRY      : int  0 0 0 2 9 15 2 2 48 0 ...
+:  $ HAHA       : int  0 0 0 1 12 12 0 8 1 0 ...
+:  $ WOW        : int  1 0 0 2 0 1 0 219 7 0 ...
+:  $ SAD        : int  0 0 0 0 0 1 3 0 33 0 ...
+
+** compute entropy
+
+#+BEGIN_SRC R
+df['entropy'] = apply(df[c('LOVE','ANGRY','HAHA','WOW','SAD')], # where to apply
+                      1, # (1: rowwise; 2: columnwise)
+                      entropy) # function to apply
+
+head(df[c(1,3:9)])
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+                                                                                                                        message
+1        #Pellegrini: 'Non è ancora il momento per una famiglia, ora penso alle #Olimpiadi del 2020' - http://ow.ly/vfxe30b9ekn
+2                                                             #25aprile, ecco i musei statali aperti - http://ow.ly/ciK930b9bWx
+3                                  La nostalgia delle star: quando il partner è uguale all’ex - VIDEO. http://ow.ly/ttuu30b9bKC
+4 #25aprile, la memoria condivisa lungo i sentieri partigiani e nei luoghi simbolo della #Resistenza - http://ow.ly/m9Si30b9bgO
+5                              Ecco la #manovra, dalla lotta all'evasione ai 3 miliardi per il sisma - http://ow.ly/ihdB30b97zv
+6               #25aprile, partigiana: 'Ricordare per non far tornare quello che ho vissuto' - VIDEO - http://ow.ly/8wtG30b97tq
+  LIKE LOVE ANGRY HAHA WOW SAD entropy
+1   47    0     0    0   1   0     NaN
+2   11    0     0    0   0   0     NaN
+3    8    1     0    0   0   0     NaN
+4   89   10     2    1   2   0     NaN
+5   39    0     9   12   0   0     NaN
+6  559   43    15   12   1   1 1.51781
+#+end_example
+
+** sort
+
+#+BEGIN_SRC R
+sorted = df[with(df, # create new (sorted) df
+                 order(-entropy)),] # by entropy, increasing (see minus sign)
+#+END_SRC
+
+** Results
+#+BEGIN_SRC R
+head(sorted$message)
+#+END_SRC
+
+#+RESULTS:
+: [1] Le grandi tappe della Guerra fredda                                                                                                                                                                                             
+: [2] #Corea Nord: #Usa non escludono raid in caso di test nucleare\nhttp://ow.ly/DCnZ30b7wlg                                                                                                                                         
+: [3] Ecco cosa è appena successo ad Amici di Maria De Filippi\n\n(e cos'ha detto Morgan prima di lasciare lo studio)                                                                                                                 
+: [4] #25Aprile, #Anpi: "Festa di tutti gli italiani". Roma divisa, due celebrazioni. Segui il LIVEBLOG http://ow.ly/Ueqk30b7IC4                                                                                                      
+: [5] Il Papa Francesco  in #Egitto non userà auto blindate http://ow.ly/gcAb30b7CIc                                                                                                                                                  
+: [6] Dall'Inizio dell'anno nel nostro Paese si sono verificati oltre 1470 casi e il 33% ha avuto complicanze. Nell'elenco anche Germania e Belgio. Nel settembre scorso l'America era stata dichiarata «libera dal morbillo endemico»
+: 413 Levels: 'Io sto con la sposa', il Magazine ANSA sul documentario di Gabriele #DelGrande, #FreeDelGrande - http://ow.ly/NiTB30b4J0e ...
+
+* discussion
+
+** 
+
+1. work in progress (a better dataset)
+2. from Basic statistics: remember kurtosis?
+3. applications? [TODO ask M. & D. for possible applications in their field]
+
+** THANKS
+
+* commands for exporting 					   :noexport:
+
+#+BEGIN_SRC sh
+pandoc --standalone -t revealjs \
+       --variable theme=''\
+       --highlight-style=pygments \
+       --variable author='Angelo Basile'\
+       --variable date='09-05-2017'\
+       --variable title='Using entropy to find controversial headlines'\
+       --slide-level 2\
+       slides.md -o slides.html
+#+END_SRC
+
+#+RESULTS:
+
+* notes for presentation					   :noexport:
+- hi everybody
+- nwo spinoza newsreader
+- given some text, we want to know if it is controversal or not
+- corpus based study (but one could measure reactions in other ways)
+- when counts are interesting!
+- issues:
+  + don't use read.table
+  + 
+** ☛ TODO add screenshot of data creation
