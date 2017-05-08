@@ -18,8 +18,6 @@
 
 ## some examples<a id="sec-1-2" name="sec-1-2"></a>
 
-. . .
-
 > THERE IS NO HIRING BIAS AGAINST WOMAN IN TECH, THEY JUST SUCK AT INTERVIEWS (Breitbart)
 
 . . .

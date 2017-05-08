@@ -283,7 +283,7 @@ pandoc --standalone -t revealjs \
        --variable date='09-05-2017'\
        --variable title='Using entropy to find controversial headlines'\
        --slide-level 2\
-       slides.md -o slides.html
+       index.md -o index.html
 #+END_SRC
 
 #+RESULTS:
