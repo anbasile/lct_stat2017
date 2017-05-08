@@ -1,0 +1,69 @@
+* Using entropy to find controversal headlines
+
+** Load the dataset
+
+#+BEGIN_SRC R :results output :session
+df <- read.csv('newsreactions.csv', header=TRUE)
+df = df[-c(1)] # remove the first column, it's an index and R recreates it anyway
+str(df)
+#+END_SRC
+
+#+RESULTS:
+: 'data.frame':	421 obs. of  8 variables:
+:  $ message    : Factor w/ 413 levels "'Io sto con la sposa', il Magazine ANSA sul documentario di Gabriele #DelGrande, #FreeDelGrande - http://ow.ly/NiTB30b4J0e",..: 144 109 308 110 229 111 108 373 233 412 ...
+:  $ description: Factor w/ 291 levels "\n"," ","'Contestazione al contenuto di questa legge totalmente assurda' (ANSA)",..: 6 270 184 24 99 8 24 278 92 105 ...
+:  $ LIKE       : int  47 11 8 89 39 559 27 2539 135 122 ...
+:  $ LOVE       : int  0 0 1 10 0 43 0 48 4 7 ...
+:  $ ANGRY      : int  0 0 0 2 9 15 2 2 48 0 ...
+:  $ HAHA       : int  0 0 0 1 12 12 0 8 1 0 ...
+:  $ WOW        : int  1 0 0 2 0 1 0 219 7 0 ...
+:  $ SAD        : int  0 0 0 0 0 1 3 0 33 0 ...
+
+** Implement the entropy function
+
+#+BEGIN_SRC R :session
+entropy <- function(vector) {
+    vprob <- c(vector/sum(vector)) # compute probs
+    h <- -sum(vprob*log2(vprob)) # compute H
+    return (h)
+}
+#+END_SRC
+
+#+RESULTS:
+
+
+** Compute entropy over reactions values
+
+#+BEGIN_SRC R :session :results none
+df['entropy'] = apply(df[c('LOVE','ANGRY','HAHA','WOW','SAD')], # where to apply
+                      1, # (1: rowwise; 2: columnwise)
+                      entropy) # function to apply
+#+END_SRC
+
+** Sort the dataframe by entropy scores
+
+#+BEGIN_SRC R :session :results none
+sorted = df[with(df, # create new (sorted) df
+                 order(-entropy)),] # by entropy, increasing (see minus sign)
+#+END_SRC
+
+					 
+** Preview 
+
+#+BEGIN_SRC R :session
+head(sorted$message)
+#+END_SRC
+
+#+RESULTS:
+| Le grandi tappe della Guerra fredda                                                                                                                                                                                              |
+| #Corea Nord: #Usa non escludono raid in caso di test nucleare                                                                                                                                                                    |
+| http://ow.ly/DCnZ30b7wlg                                                                                                                                                                                                         |
+| Ecco cosa è appena successo ad Amici di Maria De Filippi                                                                                                                                                                         |
+|                                                                                                                                                                                                                                  |
+| (e cos'ha detto Morgan prima di lasciare lo studio)                                                                                                                                                                              |
+| Festa di tutti gli italiani                                                                                                                                                                                                      |
+| Il Papa Francesco  in #Egitto non userà auto blindate http://ow.ly/gcAb30b7CIc                                                                                                                                                   |
+| Dall'Inizio dell'anno nel nostro Paese si sono verificati oltre 1470 casi e il 33% ha avuto complicanze. Nell'elenco anche Germania e Belgio. Nel settembre scorso l'America era stata dichiarata «libera dal morbillo endemico» |
+
+
+
