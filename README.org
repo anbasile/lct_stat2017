@@ -1,3 +1,4 @@
+
 * Using entropy to find controversal headlines
 
 ** Load the dataset
@@ -61,3 +62,8 @@ head(subset(sorted, select=-c(description, LIKE)))
 | Festa di tutti gli italiani                                                                                                                                                                                                      |  8 | 14 | 18 |  4 |  1 | 1.92826156444594 |
 | Il Papa Francesco  in #Egitto non userà auto blindate http://ow.ly/gcAb30b7CIc                                                                                                                                                   | 12 |  1 |  4 | 13 |  3 | 1.89651066945992 |
 | Dall'Inizio dell'anno nel nostro Paese si sono verificati oltre 1470 casi e il 33% ha avuto complicanze. Nell'elenco anche Germania e Belgio. Nel settembre scorso l'America era stata dichiarata «libera dal morbillo endemico» |  3 | 32 |  4 | 18 | 10 |  1.8715695116966 |
+
+** References
+1. [[http://jim-stone.staff.shef.ac.uk/BookInfoTheory/InfoTheoryBookChapter01.pdf][J. Stone, /Information Theory. A Tutorial Introduction/]]
+2. [[https://en.wikipedia.org/wiki/Entropy_(information_theory)]]
+3. [[http://math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf][C. Shannon, /A Mathematical Theory of Communication/]]
