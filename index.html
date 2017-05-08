@@ -372,17 +372,11 @@ str(df)
 <h2>compute entropy<a id="sec-2-16" name="sec-2-16"></a></h2>
 <pre><code>df[&#39;entropy&#39;] = apply(df[c(&#39;LOVE&#39;,&#39;ANGRY&#39;,&#39;HAHA&#39;,&#39;WOW&#39;,&#39;SAD&#39;)], # where to apply
                       1, # (1: rowwise; 2: columnwise)
-                      entropy) # function to apply
+                      entropy) # function to apply</code></pre>
+</section><section id="preview" class="slide level2">
+<h2>preview<a id="sec-2-17" name="sec-2-17"></a></h2>
+<pre><code>head(subset(df, select=-c(message, description)))
 
-head(df[c(1,3:9)])
-
-                                                                                                                        message
-1        #Pellegrini: &#39;Non è ancora il momento per una famiglia, ora penso alle #Olimpiadi del 2020&#39; - http://ow.ly/vfxe30b9ekn
-2                                                             #25aprile, ecco i musei statali aperti - http://ow.ly/ciK930b9bWx
-3                                  La nostalgia delle star: quando il partner è uguale all’ex - VIDEO. http://ow.ly/ttuu30b9bKC
-4 #25aprile, la memoria condivisa lungo i sentieri partigiani e nei luoghi simbolo della #Resistenza - http://ow.ly/m9Si30b9bgO
-5                              Ecco la #manovra, dalla lotta all&#39;evasione ai 3 miliardi per il sisma - http://ow.ly/ihdB30b97zv
-6               #25aprile, partigiana: &#39;Ricordare per non far tornare quello che ho vissuto&#39; - VIDEO - http://ow.ly/8wtG30b97tq
   LIKE LOVE ANGRY HAHA WOW SAD entropy
 1   47    0     0    0   1   0     NaN
 2   11    0     0    0   0   0     NaN
@@ -391,11 +385,11 @@ head(df[c(1,3:9)])
 5   39    0     9   12   0   0     NaN
 6  559   43    15   12   1   1 1.51781</code></pre>
 </section><section id="sort" class="slide level2">
-<h2>sort<a id="sec-2-17" name="sec-2-17"></a></h2>
+<h2>sort<a id="sec-2-18" name="sec-2-18"></a></h2>
 <pre><code>sorted = df[with(df, # create new (sorted) df
                  order(-entropy)),] # by entropy, increasing (see minus sign)</code></pre>
 </section><section id="results" class="slide level2">
-<h2>Results<a id="sec-2-18" name="sec-2-18"></a></h2>
+<h2>Results<a id="sec-2-19" name="sec-2-19"></a></h2>
 <pre><code>head(sorted$message)
 
 [1] Le grandi tappe della Guerra fredda                                                                                                                                                                                             
