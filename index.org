@@ -55,8 +55,8 @@ a discussion marked especially by the expression of opposing views (from Merriam
 
 - RQ :: Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?
 - Hypo :: the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state
-- Operationalization :: bag-of-word language modeling as a proxy for entropy score computed over user's reactions
-- Prediction :: a set of word/character n-grams will correlate with entropy scores
+- Operationalization :: n-gram language modeling as predictor for entropy scores computed over emotional reactions
+- Prediction :: sets of word/character n-grams will correlate with entropy scores
 
 * the method
 
@@ -173,7 +173,7 @@ print(-sum(vprob*log2(vprob)))
 : [1] 1
 : [1] 2.128085
 
-** some examples
+** interpretation
 
 #+BEGIN_SRC R
 entropy(c(1,1))
