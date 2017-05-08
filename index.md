@@ -3,7 +3,7 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1. the problem</a></li>
-<li><a href="#sec-2">2. the method</a></li>
+<li><a href="#sec-2">2. the (statistical) method</a></li>
 <li><a href="#sec-3">3. discussion</a></li>
 </ul>
 </div>
@@ -34,7 +34,7 @@ noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē
 
 > a discussion marked especially by the expression of opposing views (from Merriam-Webster)
 
-# the method<a id="sec-2" name="sec-2"></a>
+# the (statistical) method<a id="sec-2" name="sec-2"></a>
 
 ## a corpus<a id="sec-2-1" name="sec-2-1"></a>
 
@@ -336,6 +336,8 @@ $$H(X)=\sum_{i}-P(i)log_{2}P(i)$$
 
 1.  work in progress (a better dataset)
 2.  from Basic statistics: remember kurtosis?
-3.  applications? [TODO ask M. & D. for possible applications in their field]
+3.  applications? [ask M. & D. for possible applications in their field] <- ToDo!!
+4.  <https://github.com/anbasile/lct_stat2017> <- data & code
+5.  <https://anbasile.github.io/lct_stat2017/> <- presentation
 
 ## THANKS<a id="sec-3-2" name="sec-3-2"></a>

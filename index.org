@@ -27,7 +27,6 @@
 THERE IS NO HIRING BIAS AGAINST WOMAN IN TECH, THEY JUST SUCK AT INTERVIEWS (Breitbart)
 #+END_QUOTE
 
-
 . . .
 
 #+BEGIN_QUOTE
@@ -48,7 +47,7 @@ noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē
 a discussion marked especially by the expression of opposing views (from Merriam-Webster)
 #+END_QUOTE
 
-* the method
+* the (statistical) method
 
 ** a corpus
 
@@ -79,7 +78,6 @@ takes time and money
 . . .
 
 take user's reactions as annotations
-
 
 ** dataset
 
@@ -269,7 +267,9 @@ head(sorted$message)
 
 1. work in progress (a better dataset)
 2. from Basic statistics: remember kurtosis?
-3. applications? [TODO ask M. & D. for possible applications in their field]
+3. applications? [ask M. & D. for possible applications in their field] <- ToDo!!
+4. https://github.com/anbasile/lct_stat2017 <- data & code
+5. https://anbasile.github.io/lct_stat2017/ <- presentation
 
 ** THANKS
 
@@ -290,11 +290,12 @@ pandoc --standalone -t revealjs \
 
 * notes for presentation					   :noexport:
 - hi everybody
-- nwo spinoza newsreader
 - given some text, we want to know if it is controversal or not
 - corpus based study (but one could measure reactions in other ways)
+- distant supervision: we have no labelled data. We need a proxie
 - when counts are interesting!
 - issues:
   + don't use read.table
   + 
+- reproducible research
 ** ☛ TODO add screenshot of data creation
