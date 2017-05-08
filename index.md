@@ -14,7 +14,7 @@
 > 
 > [Prime Minister Monti brings bad luck]
 
-. . .
+## 
 
 > APRÈ LE NAUFRAGE DE LE PEN, MACRON ARCHIFAVORI (Le Figaro)
 > 
@@ -26,7 +26,14 @@ noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē
 
 > a discussion marked especially by the expression of opposing views (from Merriam-Webster)
 
-# the (statistical) method
+## outline
+
+-   **RQ:** Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?
+-   **Hypo:** the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state
+-   **Operationalization:** bag-of-word language modeling as a proxy for entropy score computed over user's reactions
+-   **Prediction:** a set of word/character n-grams will correlate with entropy scores
+
+# the method
 
 ## a corpus
 
@@ -46,7 +53,7 @@ takes time and money
 
 . . .
 
-(I don't have any)
+(I don't have any of those)
 
 ## distant supervision
 
@@ -56,7 +63,7 @@ takes time and money
 
 . . .
 
-take user's reactions as annotations
+take user's reactions as (proxie for) annotations
 
 ## dataset
 
@@ -112,13 +119,6 @@ how much information they encode?
 . . .
 
 Time for some **statistics**!
-
-## a recap, before we go on:
-
--   **RQ:** Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?
--   **Hypo:** the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state
--   **Operationalization:** bag-of-word language modeling as a proxy for entropy score computed over user's reactions
--   **Prediction:** a set of word/character n-grams will correlate with entropy scores
 
 ## Entropy
 

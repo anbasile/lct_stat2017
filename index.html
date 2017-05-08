@@ -46,20 +46,28 @@
 <p>[Prime Minister Monti brings bad luck]</p>
 </blockquote>
 </div>
-<div class="fragment">
+</section><section id="section" class="slide level2">
+<h2></h2>
 <blockquote>
 <p>APRÈ LE NAUFRAGE DE LE PEN, MACRON ARCHIFAVORI (Le Figaro)</p>
 <p>[After Le Pen's bad performance in the debate, Macron is the favored candidate]</p>
 </blockquote>
-</div>
 </section><section id="controversy" class="slide level2">
 <h2><em>Controversy</em></h2>
 <p>noun, con·tro·ver·sy, ˈkän-trə-ˌvər-sē</p>
 <blockquote>
 <p>a discussion marked especially by the expression of opposing views (from Merriam-Webster)</p>
 </blockquote>
+</section><section id="outline" class="slide level2">
+<h2>outline</h2>
+<ul>
+<li><strong>RQ:</strong> Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?</li>
+<li><strong>Hypo:</strong> the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state</li>
+<li><strong>Operationalization:</strong> bag-of-word language modeling as a proxy for entropy score computed over user's reactions</li>
+<li><strong>Prediction:</strong> a set of word/character n-grams will correlate with entropy scores</li>
+</ul>
 </section></section>
-<section><section id="the-statistical-method" class="titleslide slide level1"><h1>the (statistical) method</h1></section><section id="a-corpus" class="slide level2">
+<section><section id="the-method" class="titleslide slide level1"><h1>the method</h1></section><section id="a-corpus" class="slide level2">
 <h2>a corpus</h2>
 <div class="fragment">
 <p>facebook pages of newspapers</p>
@@ -73,7 +81,7 @@
 <p>takes time and money</p>
 </div>
 <div class="fragment">
-<p>(I don't have any)</p>
+<p>(I don't have any of those)</p>
 </div>
 </section><section id="distant-supervision" class="slide level2">
 <h2>distant supervision</h2>
@@ -81,7 +89,7 @@
 <p><img src="./img/react.png" class="img-fluid" alt="Reactions"></p>
 </div>
 <div class="fragment">
-<p>take user's reactions as annotations</p>
+<p>take user's reactions as (proxie for) annotations</p>
 </div>
 </section><section id="dataset" class="slide level2">
 <h2>dataset</h2>
@@ -150,14 +158,6 @@ Le grandi tappe della Guerra fredda
 <div class="fragment">
 <p>Time for some <strong>statistics</strong>!</p>
 </div>
-</section><section id="a-recap-before-we-go-on" class="slide level2">
-<h2>a recap, before we go on:</h2>
-<ul>
-<li><strong>RQ:</strong> Does the usage of certain words in a text correlate with the reader's emotional reactions? Some texts polarize readers: can we predict this?</li>
-<li><strong>Hypo:</strong> the occurrence of certain words (or: the discussion of particular topics) is likely to put the reader in some particular emotional state</li>
-<li><strong>Operationalization:</strong> bag-of-word language modeling as a proxy for entropy score computed over user's reactions</li>
-<li><strong>Prediction:</strong> a set of word/character n-grams will correlate with entropy scores</li>
-</ul>
 </section><section id="entropy" class="slide level2">
 <h2>Entropy</h2>
 <p><br /><span class="math display"><em>H</em>(<em>X</em>)=∑<sub><em>i</em></sub> − <em>P</em>(<em>i</em>)<em>l</em><em>o</em><em>g</em><sub>2</sub><em>P</em>(<em>i</em>)</span><br /></p>
@@ -237,7 +237,7 @@ some other text
 </tr>
 </tbody>
 </table>
-</section><section id="section" class="slide level2">
+</section><section id="section-1" class="slide level2">
 <h2></h2>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <colgroup>
@@ -296,7 +296,7 @@ Total(N)
 <p>Remember:</p>
 <p><br /><span class="math display"><em>P</em>(<em>i</em>)=<em>c</em><em>o</em><em>u</em><em>n</em><em>t</em>(<em>i</em>)/<em>N</em></span><br /></p>
 <p><br /><span class="math display"><em>H</em>(<em>X</em>)=∑<sub><em>i</em></sub> − <em>P</em>(<em>i</em>)<em>l</em><em>o</em><em>g</em><sub>2</sub><em>P</em>(<em>i</em>)</span><br /></p>
-</section><section id="section-1" class="slide level2">
+</section><section id="section-2" class="slide level2">
 <h2></h2>
 <pre><code>reactions &lt;- c(1 ,3 ,1 ,1 ,1)</code></pre>
 </section><section id="implementing-the-function" class="slide level2">
@@ -381,7 +381,7 @@ str(df)
 [6] Dall&#39;Inizio dell&#39;anno nel nostro Paese si sono verificati oltre 1470 casi e il 33% ha avuto complicanze. Nell&#39;elenco anche Germania e Belgio. Nel settembre scorso l&#39;America era stata dichiarata «libera dal morbillo endemico»
 413 Levels: &#39;Io sto con la sposa&#39;, il Magazine ANSA sul documentario di Gabriele #DelGrande, #FreeDelGrande - http://ow.ly/NiTB30b4J0e ...</code></pre>
 </section></section>
-<section><section id="discussion" class="titleslide slide level1"><h1>discussion</h1></section><section id="section-2" class="slide level2">
+<section><section id="discussion" class="titleslide slide level1"><h1>discussion</h1></section><section id="section-3" class="slide level2">
 <h2></h2>
 <ol type="1">
 <li>work in progress:
