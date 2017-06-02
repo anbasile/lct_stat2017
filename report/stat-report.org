@@ -1,0 +1,187 @@
+#+TITLE: Using Entropy to Build a Corpus of Controversal News Headlines
+#+AUTHOR: Angelo Basile
+#+EMAIL: a.basile@student.rug.nl
+#+DATE: [2016-11-19 sab]
+#+OPTIONS: toc:nil
+
+#+LaTeX_CLASS_OPTIONS: [article,11pt,nofixltx2e]
+#+LATEX_HEADER: \usepackage{acl2016}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{latexsym}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{color}
+# #+LATEX_HEADER: \usepackage[authoryear]{natbib}
+#+LATEX_HEADER: \aclfinalcopy 
+
+#+BEGIN_ABSTRACT
+Some news are more prone to elicit controversy than others. In this paper we propose a method for building a corpus of controversal news headlines using distant supervision. We scraped Facebook's newspapers pages for headlines and users's reactions: using entropy as a proxy for annotation we rank the headlines by the score of entropy computed over the reactions. By manually inspecting the outcome we found positive results.
+#+END_ABSTRACT
+
+* Introduction
+
+Some news headlines elicit the same emotional reactions from the majority of the readers, but some others do not. The following are two quotes, one from /Breitbart/, a strongly opinionated right-wing news website, while the second is from the /New York Times/:
+
+#+BEGIN_QUOTE
+There’s No Hiring Bias Against Women In Tech, They Just Suck At Interviews
+
+--- Breitbart, 1 June 2016
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+Hillary Clinton has an 85% chance to win.
+
+--- NY Times, 8 Novembre 2016
+#+END_QUOTE
+
+Although the first headline might sound harsh, the readers of /Breitbart/ might probably all express the same reaction. The second quote is different: all the readers who were in favor of Clinton at the time of reading the news might have been happy, while all the supporters of Donal Trump would have probably expressed a disappointed reaction: we define these kind of headlines as /controversial/. We want to build a corpus of such news.
+
+# distant supervision
+Building large corpora from the web for unusual tasks can be extremely expensive in terms of both time and money: /distant supervision/ is a useful technique for overcoming this problem. The idea is simple: we use a reasonable signal in the data as a proxy for annotations. For example: if we are building a corpus for sentiment analysis from twitter, we can consider all the tweet containing a smile as instances of happy tweets.
+
+If we were to build a dataset for emotion detection we could compute the mode over the reaction vector for each post and assign to it the mode itself as a label: for example, if a post received mostly reactions of type =LOVE= we could assign the label =LOVE= to that post. However, here we are looking for controversal news, so we will not be able to use the counts directly.
+
+This paper is structured as follows: first we will describe how we collected the data and what form the data have; then, we will explain the idea of entropy so that also readers not familiar with it will be able to appreciate the results; in Section [[#entropyasproxy]] we will then describe how entropy can be related to controversy and how we will exploit the reactions to find controversy; finally we will dicuss the results.
+
+# note on Italian
+We showed some English examples to make the explanation easier, but we will focus on Italian only: however, the method is completely independent from the target language.
+
+* Method
+
+** Scraping Facebook pages
+
+Facebook can be considered to some extent a huge corpus: all the major newspapers post on Facebook all their content.We used the Facebook Graph API[fn:1] to download not only the text, but also the user's reactions[fn:3] to each post. We are assuming that the users express their emotion not by reading the full article, but simply by looking at the excerpt and eventually at what is called the 'descriptor': a short text that the author of the post (the social media manager, probably) adds to comment the actual article. For this reason we are collecting both the text and the description and later, when we will model the data for prediction, we will treat these as two separate variables. Figure [[fig:sample1]] shows an example from a target page.
+
+#+CAPTION: A post with the text and the users' reactions
+#+NAME:   fig:sample1
+[[./img/sample1.png]]
+
+#+CAPTION: Detailed view of the users' reactions
+#+NAME:   fig:sample2
+[[./img/sample2.png]]
+
+#+CAPTION: The reaction count vector. In this case the emotions are, from left to right, =ANGRY, LIKE, HAHA, WOW, SAD, LOVE.=
+#+NAME:   fig:sample3
+[[./img/sample3.png]]
+
+# TODO check page name
+We selected four newspaper pages to scrape: a news agency (=AgenziaANSA=), one unbiased newspaper (=LaStampa=), a right-wing journal (=ilGiornale=) and a left-wing one (=ilManifesto=).
+
+** Data
+
+Table [[tab:sample-dataset]] shows how the resulting dataset is structured: each headline is matched to a vector containing the raw counts of the users' reactions. Figure [[fig:sample2]] shows an example of users' reactions and Figure [[fig:sample3]] shows the total counts.
+
+The present size of the dataset amounts to 479 news headlines. We are going to compute the entropy over the reaction count vectors.
+
+#+CAPTION: Sampe rows from the dataset
+#+NAME:   tab:sample-dataset
+#+ATTR_LaTeX: :float multicolumn
+| text                                | LIKE | LOVE | ANGRY | HAHA | WOW | SAD |
+|-------------------------------------+------+------+-------+------+-----+-----|
+| Le grandi tappe della Guerra fredda | 379  |    1 |     3 |    1 |   1 |   1 |
+| #Fisco, case ecologiche ed e-bike   | 393  |    4 |     3 |   11 |   1 |   1 |
+
+** Entropy
+
+In this section we will be explaining what entropy is and why is it useful: we think that it is a concept that can be applied to many different problems and for this reason it is worth understanding it properly.
+
+\begin{equation}
+H(X)=\sum_{i}-P(i)log_{2}P(i)
+\end{equation}
+
+One one to think of entropy, is to interpret is as a measure of uncertainty or surprise: the more uncertain we are about something happening, or the more surprised we are, the higher the entropy. The graph in Figure [[fig:bentropy-plot]] shows the relation between entropy and probability: entropy is high when two different outcomes have the same probability.
+
+#+CAPTION: TODO Describe
+#+NAME:   fig:bentropy-plot
+[[./img/bentropy_plot.png]]
+
+It is possibile to think of entropy as a measure of skweness and its relation with kurtosis would be inversal:
+
+# [TODO shows same graph and add kurtosis and entropy values]
+
+# entropy as measure of purity
+Another way to interpret entropy is to think of it as a measure of impurity. Figure [[fig:classes-purity]] represents two groups: the left group is much more impure than the right one and thus its entropy will be higher.
+
+#+CAPTION: Two groups representing two fictious sets of reactions to two posts.
+#+NAME:   fig:classes-purity
+[[./img/classes.png]]
+
+** Using entropy as a proxy for annotations
+   :PROPERTIES:
+   :CUSTOM_ID: entropyasproxy
+   :END:
+
+In order to use entropy as a proxy for annotations, we need to define how it is related to controversy. From our definition of controversy and from our dataset, we can say that a headline is controversal when at least two emotion classes show high counts; the following (fictious) example makes this clear:
+
+#+CAPTION: A fictious example of a controversal headline
+#+NAME:   tab:example-controvery
+| text                             | WOW | SAD |
+|----------------------------------+-----+-----|
+| Clinton has an 85% chance to win | 500 | 350 |
+
+The lower the entropy, the more skewed the distribution will be:
+
+# #+BEGIN_SRC R :file ./img/a1barplot1.png :results graphics :session :exports results
+# barplot(c(500, 350, 30, 22, 10), names.arg=c('HAHA', 'SAD', 'ANGRY', 'LOVE', 'WOW'))
+# #+END_SRC
+
+#+CAPTION: TODO Describe
+#+NAME:   fig:bar-plot
+[[file:./img/a1barplot1.png]]
+
+
+# TODO
+
+# By definition, entropy is high when the uncertainty about an event is high: if the same text elicit a high number of reactions of two differnet kinds (e.g. 'HAHA' and 'SAD'), then 
+
+# no like
+
+
+# our contribution
+# TODO: add "our contribution"
+# In this paper we propose a method to build a corpus of controversial headlines: we plan to use this corpus to model the text in order to predict automatically wether a certain text, from a certain newspaper, will be controversal or not: however, in this paper we will only discuss the creation of the corpus.
+
+
+# We leave out the =LIKE= column when computing the entropy: it is hard to interpret[fn:2] and then count is always a lot higher when compared to the other reactions. Consistenly high counts would lead to low entropy for all the posts and this would make it harder to select the really controversal headlines. 
+
+** Results
+
+In order to evaluate the results we have to manually inspect the data. After sorting the headlines by decreasing entropy we get the followings:
+
+[TODO ADD text]
+
+* Discussion, Conclusion and Future Work
+
+# - two annotators working independetly
+# - discussing the fact that we are leaving out the LIKE (less LOVE)
+
+By manually inspecting the sorted dataset we found that the method produced good results. Unfortunately, we don't have any other metric other than human judjement.
+
+The results obtained by using distant supervision methods should always be considered as /silver data/: for this reason we plan to have human annotators reviewing the dataset; given the nature of the task, we plan to have at least two annotators working on the same data in order to compare how often they will agree.
+
+We have to note that deciding how to use the signal in the data (reactions, in this case) is not obvious: for example, we decided to leave out the =LIKE= column when computing the entropy, because it lead to less interpretable data and an average lower entropy for all the headlnes. However, those users who use the =LIKE= reaction to express agreement with the content, will not use the =LOVE= reaction: this should mean that in general the positive reactions might always be lower than what they would have been if we had treated =LIKE= as a positive reaction.
+
+Summarising, we proposed a method for finding controversal headlines on Facebook using entropy. By manually inspecting the results we found the method to be successfull.
+
+For the next step we will be modeling the text in order to predict the entropy score automatically. Additionally, we will investigate how a news reporting on the same event is received by different audiences.
+
+* Acknowledgments
+
+We are thankful to the instructors and the students of the Methodology & Statistics for Linguistic Reaserch Class (2017) of the University of Gronigen for the useful feedback provided.
+
+# \bibliographystyle{eacl2017}
+# \bibliography{mybib.bib}
+
+* Footnotes
+
+[fn:1] See [[https://developers.facebook.com/docs/graph-api]]. The code for downloading the data is available at https://github.com/anbasile/fb-clic-ita-reactions. We did not use the official Facebook-sdk Python library because at the time we were collecting the data it was not able to retrieve the =description= field from the post.
+
+[fn:2] The meaning of =LIKE= is indeed ambigous: in some cases it means something like 'I read it, but I don't like the content', while in some other cases it means 'I read it and I really liked it'.
+
+[fn:3] Since February 2016 Facebook users can react to a post not only with a like but by choosing from a set of 5 different emotions: =SAD, LIKE, HAHA, WOW, SAD, LOVE=. We exploit the possibile distributions of these emotions to find controversal news. In Section [[#entrpyasproxy]] we describe in more details how we model controversy using entropy.
+
+
+# \printbibliography
